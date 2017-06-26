@@ -1,5 +1,10 @@
 <template>
   <div id="entry-dashboard">
+    <div class="heading">
+      <div class="mood">Mood</div>
+      <div class="stress">Stress</div>
+      <div class="energy">Energy</div>
+    </div>
     <div class="row">
       <div class="period morning">
         <div class="pad">
@@ -47,6 +52,20 @@ export default {
   min-width: 916px;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+.heading {
+  display: flex;
+  padding-left: 240px;
+  div {
+    font-weight: 500;
+    font-size: 24px;
+    text-align: center;
+    width: calc(100% / 3);
+    &.mood { color: $mood; }
+    &.stress { color: $stress; }
+    &.energy { color: $energy; }
+  }
 }
 
 .row {
