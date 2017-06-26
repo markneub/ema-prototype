@@ -12,7 +12,7 @@
           <div class="description">before noon</div>
         </div>
       </div>
-      <rating v-for="measure in ['mood', 'stress', 'energy']" :measure="measure"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="morning" :key="`${measure}-morning`"></rating>
     </div>
     <div class="row">
       <div class="period afternoon">
@@ -21,7 +21,7 @@
           <div class="description">noon to 5:00</div>
         </div>
       </div>
-      <rating v-for="measure in ['mood', 'stress', 'energy']" :measure="measure"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="afternoon" :key="`${measure}-morning`"></rating>
     </div>
     <div class="row last">
       <div class="period evening">
@@ -30,7 +30,7 @@
           <div class="description">5:00 to bedtime</div>
         </div>
       </div>
-      <rating v-for="measure in ['mood', 'stress', 'energy']" :measure="measure"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="evening" :key="`${measure}-morning`"></rating>
     </div>
   </div>
 </template>
@@ -39,6 +39,11 @@
 import Rating from '@/components/Rating'
 
 export default {
+  data () {
+    return {
+      measures: ['mood', 'stress', 'energy']
+    }
+  },
   components: {
     Rating
   }

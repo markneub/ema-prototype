@@ -1,7 +1,7 @@
 <template>
   <div :class="['rating', measure]">
     <div class="inner">
-      <button class="rate" disabled>Rate</button>
+      <button @click="doRating" class="rate" :style="buttonStyle">Rate</button>
     </div>
   </div>
 </template>
@@ -9,10 +9,26 @@
 <script>
 export default {
   name: 'rating',
-  props: ['measure'],
+  props: ['measure', 'period'],
   data () {
     return {
       rating: null
+    }
+  },
+  methods: {
+    doRating () {
+      console.debug(this)
+    }
+  },
+  computed: {
+    activeButton () {
+      return this.rating === null
+    },
+    buttonStyle () {
+      return {
+        cursor: this.activeButton ? 'pointer' : 'not-allowed',
+        opacity: this.activeButton ? 1 : 0.25
+      }
     }
   }
 }
@@ -42,6 +58,7 @@ export default {
     font-size: 16px;
     text-transform: uppercase;
     font-weight: 400;
+    outline: none;
   }
 
   &.mood button.rate {
