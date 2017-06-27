@@ -42,7 +42,7 @@ export default {
       legendHigh: {
         mood: 'happy',
         stress: 'stress free',
-        energy: 'amped'
+        energy: 'wired'
       }
     }
   },
@@ -61,9 +61,7 @@ export default {
       for (let i = 1; i <= n; i++) {
         $(this.$el).find(`.circle-${i}`).addClass('click')
       }
-      window.setTimeout(() => {
-        this.submitRating()
-      }, 150)
+      window.setTimeout(this.submitRating, 150)
     },
     showModal () {
       this.$refs.modal.open()
@@ -167,7 +165,6 @@ export default {
     border-radius: 16px;
     background-color: #D8D8D8;
     margin: 0 4px;
-    cursor: pointer;
     &.filled {
       .mood & { background-color: $mood; }
       .stress & { background-color: $stress; }
