@@ -75,6 +75,7 @@ export default {
     },
     submitRating () {
       this.rating = $(this.$el).find('.circle.click').length
+      this.$emit('rate', this.period, this.measure, this.rating)
       this.$refs.modal.close()
     },
     smallCircleClass (n) {

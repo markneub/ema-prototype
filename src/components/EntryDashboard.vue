@@ -12,7 +12,7 @@
           <div class="description">before noon</div>
         </div>
       </div>
-      <rating v-for="measure in measures" :measure="measure" period="morning" :key="`${measure}-morning`"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="morning" :key="`${measure}-morning`" v-on:rate="rate"></rating>
     </div>
     <div class="row">
       <div class="period afternoon">
@@ -21,7 +21,7 @@
           <div class="description">noon to 5:00</div>
         </div>
       </div>
-      <rating v-for="measure in measures" :measure="measure" period="afternoon" :key="`${measure}-morning`"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="afternoon" :key="`${measure}-morning`" v-on:rate="rate"></rating>
     </div>
     <div class="row last">
       <div class="period evening">
@@ -30,7 +30,7 @@
           <div class="description">5:00 to bedtime</div>
         </div>
       </div>
-      <rating v-for="measure in measures" :measure="measure" period="evening" :key="`${measure}-morning`"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="evening" :key="`${measure}-morning`" v-on:rate="rate"></rating>
     </div>
     <rating-history :userdata="userdata"></rating-history>
   </div>
@@ -51,6 +51,27 @@ export default {
   components: {
     Rating,
     RatingHistory
+  },
+  methods: {
+    rate (period, measure, rating) {
+      let periodMap = {
+        'morning': 0,
+        'afternoon': 1,
+        'evening': 2
+      }
+      let periodIndex = periodMap[period]
+      if (this.userdata.length === 7) { // no data for today has been recorded yet
+        this.userdata.push({
+          'mood': [null, null, null],
+          'stress': [null, null, null],
+          'energy': [null, null, null]
+        })
+      }
+      // append the new datum reactively
+      let dayData = this.userdata[7]
+      dayData[measure][periodIndex] = rating
+      this.$set(this.userdata, 7, dayData)
+    }
   }
 }
 </script>

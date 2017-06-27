@@ -34,14 +34,6 @@ export default {
     }
   },
   computed: {
-    moodData () {
-      let out = []
-      this.userdata.forEach(arrayEl => {
-        out = out.concat(arrayEl['mood'])
-      })
-      out = out.slice(-20)
-      return out
-    },
     columns () {
       return [{
         'type': 'string',
@@ -61,10 +53,10 @@ export default {
       let out = []
       this.userdata.forEach((arrayEl, index) => {
         let dayLabel = moment().subtract(7 - index, 'days').format('ddd Do')
-        out.push([dayLabel, arrayEl['mood'][0], arrayEl['stress'][0], arrayEl['energy'][0]])
-        // afternoon and evening labels aren't shown
-        out.push([index + 'A', arrayEl['mood'][1], arrayEl['stress'][1], arrayEl['energy'][1]])
-        out.push([index + 'E', arrayEl['mood'][2], arrayEl['stress'][2], arrayEl['energy'][2]])
+        out.push([dayLabel + '', arrayEl['mood'][0], arrayEl['stress'][0], arrayEl['energy'][0]])
+        // afternoon and evening labels aren't shown on axis
+        out.push([dayLabel + ' afternoon', arrayEl['mood'][1], arrayEl['stress'][1], arrayEl['energy'][1]])
+        out.push([dayLabel + ' evening', arrayEl['mood'][2], arrayEl['stress'][2], arrayEl['energy'][2]])
       })
       return out
     }
