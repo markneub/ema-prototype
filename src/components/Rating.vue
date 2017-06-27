@@ -23,6 +23,7 @@
 
 <script>
 /* global $ */
+import moment from 'moment'
 import { SweetModal } from 'sweet-modal-vue'
 
 export default {
@@ -33,6 +34,7 @@ export default {
   },
   data () {
     return {
+      now: moment(),
       rating: null,
       legendLow: {
         mood: 'sad',
@@ -45,6 +47,11 @@ export default {
         energy: 'wired'
       }
     }
+  },
+  mounted () {
+    window.setInterval(() => {
+      this.now = moment()
+    }, 1000)
   },
   methods: {
     circlesMouseLeave () {

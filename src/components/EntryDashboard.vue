@@ -32,20 +32,25 @@
       </div>
       <rating v-for="measure in measures" :measure="measure" period="evening" :key="`${measure}-morning`"></rating>
     </div>
+    <rating-history :userdata="userdata"></rating-history>
   </div>
 </template>
 
 <script>
 import Rating from '@/components/Rating'
+import RatingHistory from '@/components/RatingHistory'
+import UserData from '@/js/mock-data'
 
 export default {
   data () {
     return {
-      measures: ['mood', 'stress', 'energy']
+      measures: ['mood', 'stress', 'energy'],
+      userdata: UserData()
     }
   },
   components: {
-    Rating
+    Rating,
+    RatingHistory
   }
 }
 </script>
