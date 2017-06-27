@@ -1,23 +1,24 @@
 <template>
   <div :class="['rating', measure]">
     <div class="inner">
-      <button @click="doRating" class="rate" :style="buttonStyle">Rate</button>
+      <button v-if="!rating" @click="showModal" :class="['showmodal button', measure]" :style="showModalButtonStyle">Rate</button>
+      <template v-else>
+        {{ rating }}
+      </template>
     </div>
     <sweet-modal :hide-close-button="true" ref="modal">
       <div class="heading">Mark, please rate your <span :class="`${measure}-color`">{{ measure }}</span> this {{ period }}.
       </div>
-      <div class="circles">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+      <div class="circles" @mouseleave="circlesMouseLeave">
+        <div v-for="n in 5" :class="`circle-${n}`" @mouseover="circleMouseOver(n)" @click="circleClick(n)" class="circle"></div>
       </div>
+      <button @click="submitRating" :class="['submit button', measure]">SUBMIT</button>
     </sweet-modal>
   </div>
 </template>
 
 <script>
+/* global $ */
 import { SweetModal } from 'sweet-modal-vue'
 
 export default {
@@ -32,15 +33,34 @@ export default {
     }
   },
   methods: {
-    doRating () {
+    circlesMouseLeave () {
+      $(this.$el).find('.circle.hover').removeClass('hover')
+    },
+    circleMouseOver (n) {
+      $(this.$el).find('.circle.hover').removeClass('hover')
+      for (let i = 1; i <= n; i++) {
+        $(this.$el).find(`.circle-${i}`).addClass('hover')
+      }
+    },
+    circleClick (n) {
+      $(this.$el).find('.circle').removeClass('hover').removeClass('click')
+      for (let i = 1; i <= n; i++) {
+        $(this.$el).find(`.circle-${i}`).addClass('click')
+      }
+    },
+    showModal () {
       this.$refs.modal.open()
+    },
+    submitRating () {
+      this.rating = $(this.$el).find('.circle.click').length
+      this.$refs.modal.close()
     }
   },
   computed: {
     activeButton () {
       return this.rating === null
     },
-    buttonStyle () {
+    showModalButtonStyle () {
       return {
         cursor: this.activeButton ? 'pointer' : 'not-allowed',
         opacity: this.activeButton ? 1 : 0.25
@@ -63,32 +83,8 @@ export default {
     justify-content: center;
   }
 
-  button.rate {
-    border-width: 2px;
-    border-style: solid;
-    background: transparent;
-    padding: 6px 8px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+  button.showmodal {
     font-size: 18px;
-    text-transform: uppercase;
-    font-weight: 500;
-    outline: none;
-  }
-
-  &.mood button.rate {
-    color: $mood;
-    border-color: $mood;
-  }
-
-  &.stress button.rate {
-    color: $stress;
-    border-color: $stress;
-  }
-  &.energy button.rate {
-    color: $energy;
-    border-color: $energy;
   }
 }
 
@@ -102,15 +98,33 @@ export default {
 
   .circles {
     display: flex;
-    justify-content: space-around;
-    width: 80%;
-    margin: 20px auto 0;
+    justify-content: center;
+    width: 400px;
+    margin: 40px auto;
+    border-radius: 32px;
     .circle {
       width: 64px;
       height: 64px;
       border-radius: 32px;
       background-color: #D8D8D8;
+      margin: 0 8px;
+      cursor: pointer;
+      &.hover {
+        .mood & { background-color: lighten($mood, 30%); }
+        .stress & { background-color: lighten($stress, 30%); }
+        .energy & { background-color: lighten($energy, 30%); }
+      }
+      &.click {
+        .mood & { background-color: $mood; }
+        .stress & { background-color: $stress; }
+        .energy & { background-color: $energy; }
+      }
     }
+  }
+
+  button.submit {
+    margin-top: 32px;
+    font-size: 24px;
   }
 }
 

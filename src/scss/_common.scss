@@ -7,3 +7,30 @@ $energy: #F6A623;
 .mood-color { color: $mood; }
 .stress-color { color: $stress; }
 .energy-color { color: $energy; }
+
+.button {
+  border-width: 2px;
+  border-style: solid;
+  background: transparent;
+  padding: 6px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: 500;
+  outline: none;
+  
+  &.mood {
+    color: $mood;
+    border-color: $mood;
+  }
+
+  &.stress {
+    color: $stress;
+    border-color: $stress;
+  }
+  &.energy{
+    color: $energy;
+    border-color: $energy;
+  }
+}
