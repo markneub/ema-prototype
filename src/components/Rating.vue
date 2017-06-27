@@ -1,7 +1,7 @@
 <template>
   <div :class="['rating', measure]">
     <div class="inner">
-      <button v-if="!rating" @click="showModal" :class="['showmodal button', measure]" :style="showModalButtonStyle">Rate</button>
+      <button v-if="!rating" @click="showModal" :class="['showmodal button', measure]" :style="showModalButtonStyle" :disabled="buttonActive ? false : true">Rate</button>
       <div v-else class="small-circles">
         <div v-for="n in 5" :class="['small-circle', smallCircleClass(n)]"></div>
       </div>
@@ -75,13 +75,21 @@ export default {
     }
   },
   computed: {
-    activeButton () {
-      return this.rating === null
+    buttonActive () {
+      if (this.period === 'morning') return true
+      let noon = moment().hour(12).minute(0).second(0).millisecond(0)
+      let five = moment().hour(17).minute(0).second(0).millisecond(0)
+      if (this.period === 'afternoon') {
+        return this.now.isAfter(noon)
+      }
+      if (this.period === 'evening') {
+        return this.now.isAfter(five)
+      }
     },
     showModalButtonStyle () {
       return {
-        cursor: this.activeButton ? 'pointer' : 'not-allowed',
-        opacity: this.activeButton ? 1 : 0.25
+        cursor: this.buttonActive ? 'pointer' : 'not-allowed',
+        opacity: this.buttonActive ? 1 : 0.25
       }
     }
   }
@@ -172,6 +180,5 @@ export default {
     }
   }
 }
-
 
 </style>
