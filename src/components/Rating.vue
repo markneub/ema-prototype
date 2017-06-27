@@ -35,6 +35,8 @@ export default {
   data () {
     return {
       now: moment(),
+      noon: moment().hour(12).minute(0).second(0).millisecond(0),
+      five: moment().hour(17).minute(0).second(0).millisecond(0),
       rating: null,
       legendLow: {
         mood: 'sad',
@@ -52,6 +54,13 @@ export default {
     window.setInterval(() => {
       this.now = moment()
     }, 1000)
+
+    // if the user hasn't rated their measures for the current period yet, prompt them
+    if (!this.rating) {
+      if (this.period === 'morning' && this.now.isBefore(this.noon) || this.period === 'afternoon' && this.now.isBefore(this.five) && this.now.isAfter(this.noon) || this.period === 'evening' && this.now.isAfter(this.five)) {
+        this.$refs.modal.open()
+      }
+    }
   },
   methods: {
     circlesMouseLeave () {
@@ -85,13 +94,11 @@ export default {
   computed: {
     buttonActive () {
       if (this.period === 'morning') return true
-      let noon = moment().hour(12).minute(0).second(0).millisecond(0)
-      let five = moment().hour(17).minute(0).second(0).millisecond(0)
       if (this.period === 'afternoon') {
-        return this.now.isAfter(noon)
+        return this.now.isAfter(this.noon)
       }
       if (this.period === 'evening') {
-        return this.now.isAfter(five)
+        return this.now.isAfter(this.five)
       }
     },
     showModalButtonStyle () {
