@@ -26,7 +26,7 @@ export default {
             min: 0.5
           }
         },
-        colors: ['#50E3C2', '#F6A623', '#D0011B'],
+        colors: ['#50E3C2', '#D0011B', '#F6A623'],
         width: '100%',
         height: 500,
         curveType: 'function'
@@ -43,10 +43,10 @@ export default {
         'label': 'Mood'
       }, {
         'type': 'number',
-        'label': 'Energy'
+        'label': 'Stress'
       }, {
         'type': 'number',
-        'label': 'Stress'
+        'label': 'Energy'
       }]
     },
     rows () {
