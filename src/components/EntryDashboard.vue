@@ -1,5 +1,6 @@
 <template>
   <div id="entry-dashboard">
+    <div id="time-line"><div>{{ now.format('LT') }}</div></div>
     <div class="heading">
       <div class="mood">Mood</div>
       <div class="stress">Stress</div>
@@ -37,13 +38,16 @@
 </template>
 
 <script>
+/* global $ */
 import Rating from '@/components/Rating'
 import RatingHistory from '@/components/RatingHistory'
 import UserData from '@/js/mock-data'
+import moment from 'moment'
 
 export default {
   data () {
     return {
+      now: moment(),
       measures: ['mood', 'stress', 'energy'],
       userdata: UserData()
     }
@@ -52,7 +56,33 @@ export default {
     Rating,
     RatingHistory
   },
+  mounted () {
+    window.setInterval(this.updateTimeLine, 1000)
+    this.$nextTick(this.updateTimeLine)
+  },
   methods: {
+    updateTimeLine () {
+      let maxOffset = $('.row.last').position().top + $('.row.last').innerHeight()
+      let noonOffset = $('.row:eq(1)').position().top - 1
+      let fiveOffset = $('.row:eq(2)').position().top - 1
+      this.now = moment()
+      let midnight = moment().startOf('day')
+      let noon = moment().hour(12).minute(0).second(0).millisecond(0)
+      let five = moment().hour(17).minute(0).second(0).millisecond(0)
+      let minutesIn = this.now.diff(midnight, 'minutes')
+      let ratio, pxOffset
+      if (this.now.isSameOrBefore(noon)) {
+        ratio = minutesIn / (12 * 60)
+        pxOffset = ratio * noonOffset
+      } else if (this.now.isAfter(noon) && this.now.isSameOrBefore(five)) {
+        ratio = (minutesIn - (12 * 60)) / (5 * 60)
+        pxOffset = (ratio * (fiveOffset - noonOffset)) + noonOffset
+      } else if (this.now.isAfter(five)) {
+        ratio = (minutesIn - (17 * 60)) / (7 * 60)
+        pxOffset = (ratio * (maxOffset - fiveOffset)) + fiveOffset
+      }
+      $('#time-line').css('top', pxOffset)
+    },
     rate (period, measure, rating) {
       let periodMap = {
         'morning': 0,
@@ -83,6 +113,7 @@ export default {
   min-width: 916px;
   max-width: 1280px;
   margin: 80px auto 0;
+  position: relative;
 }
 
 .heading {
@@ -130,6 +161,24 @@ export default {
 
   .rating {
     width: calc((100% - 240px) / 3);
+  }
+}
+
+#time-line {
+  width: calc(100% - 240px);
+  position: absolute;
+  margin-left: 240px;
+  height: 0;
+  right: 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  text-align: right;
+  > div {
+    position: relative;
+    display: inline-block;
+    transform: translate(100%, -50%);
+    padding-left: 10px;
+    color: rgba(0, 0, 0, 0.4);
   }
 }
 </style>
