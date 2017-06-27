@@ -93,7 +93,6 @@ export default {
       background: url('../images/sunset.png') 80% bottom/22px 19px no-repeat;
     }
     .name {
-      color: #4A4A4A;
       font-size: 30px;
       font-weight: 500;
     }

@@ -15,5 +15,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Montserrat', sans-serif;
+  color: #4A4A4A;
 }
 </style>

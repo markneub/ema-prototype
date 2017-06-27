@@ -7,10 +7,15 @@
       </div>
     </div>
     <sweet-modal :hide-close-button="true" ref="modal">
-      <div class="heading">Mark, please rate your <span :class="`${measure}-color`">{{ measure }}</span> this {{ period }}.
+      <div class="heading">Mark, please rate your <span :class="`${measure}-color`">{{ measure }}</span>  this {{ period }}.
       </div>
       <div class="circles" @mouseleave="circlesMouseLeave">
         <div v-for="n in 5" :class="`circle-${n}`" @mouseover="circleMouseOver(n)" @click="circleClick(n)" class="circle"></div>
+      </div>
+      <div class="legend">
+        <div>{{ legendLow[measure] }}</div>
+        <div>neutral</div>
+        <div>{{ legendHigh[measure] }}</div>
       </div>
     </sweet-modal>
   </div>
@@ -28,7 +33,17 @@ export default {
   },
   data () {
     return {
-      rating: null
+      rating: null,
+      legendLow: {
+        mood: 'sad',
+        stress: 'stressed out',
+        energy: 'tired'
+      },
+      legendHigh: {
+        mood: 'happy',
+        stress: 'stress free',
+        energy: 'amped'
+      }
     }
   },
   methods: {
@@ -48,7 +63,7 @@ export default {
       }
       window.setTimeout(() => {
         this.submitRating()
-      }, 350)
+      }, 150)
     },
     showModal () {
       this.$refs.modal.open()
@@ -105,7 +120,7 @@ export default {
     display: flex;
     justify-content: center;
     width: 400px;
-    margin: 40px auto;
+    margin: 40px auto 20px;
     border-radius: 32px;
     .circle {
       width: 64px;
@@ -127,9 +142,17 @@ export default {
     }
   }
 
-  button.submit {
-    margin-top: 32px;
-    font-size: 24px;
+  .legend {
+    width: 426px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    div {
+      font-weight: 400;
+      text-align: center;
+      width: 100px;
+      line-height: 1.2;
+    }
   }
 }
 
