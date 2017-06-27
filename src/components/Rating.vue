@@ -12,7 +12,6 @@
       <div class="circles" @mouseleave="circlesMouseLeave">
         <div v-for="n in 5" :class="`circle-${n}`" @mouseover="circleMouseOver(n)" @click="circleClick(n)" class="circle"></div>
       </div>
-      <button @click="submitRating" :class="['submit button', measure]">SUBMIT</button>
     </sweet-modal>
   </div>
 </template>
@@ -47,6 +46,9 @@ export default {
       for (let i = 1; i <= n; i++) {
         $(this.$el).find(`.circle-${i}`).addClass('click')
       }
+      window.setTimeout(() => {
+        this.submitRating()
+      }, 350)
     },
     showModal () {
       this.$refs.modal.open()
