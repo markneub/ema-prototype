@@ -7,7 +7,7 @@
       </div>
     </div>
     <sweet-modal :hide-close-button="true" ref="modal">
-      <div class="heading">Mark, please rate your <span :class="`${measure}-color`">{{ measure }}</span>  this {{ period }}.
+      <div class="heading">Bill, please rate your <span :class="`${measure}-color`">{{ measure }}</span>  this {{ period }}.
       </div>
       <div class="circles" @mouseleave="circlesMouseLeave">
         <div v-for="n in 5" :class="`circle-${n}`" @mouseover="circleMouseOver(n)" @click="circleClick(n)" class="circle"></div>
