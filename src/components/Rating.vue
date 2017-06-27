@@ -2,9 +2,9 @@
   <div :class="['rating', measure]">
     <div class="inner">
       <button v-if="!rating" @click="showModal" :class="['showmodal button', measure]" :style="showModalButtonStyle">Rate</button>
-      <template v-else>
-        {{ rating }}
-      </template>
+      <div v-else class="small-circles">
+        <div v-for="n in 5" :class="['small-circle', smallCircleClass(n)]"></div>
+      </div>
     </div>
     <sweet-modal :hide-close-button="true" ref="modal">
       <div class="heading">Mark, please rate your <span :class="`${measure}-color`">{{ measure }}</span> this {{ period }}.
@@ -54,6 +54,9 @@ export default {
     submitRating () {
       this.rating = $(this.$el).find('.circle.click').length
       this.$refs.modal.close()
+    },
+    smallCircleClass (n) {
+      return n <= this.rating ? 'filled' : ''
     }
   },
   computed: {
@@ -125,6 +128,26 @@ export default {
   button.submit {
     margin-top: 32px;
     font-size: 24px;
+  }
+}
+
+.small-circles {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-radius: 16px;
+  .small-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: #D8D8D8;
+    margin: 0 4px;
+    cursor: pointer;
+    &.filled {
+      .mood & { background-color: $mood; }
+      .stress & { background-color: $stress; }
+      .energy & { background-color: $energy; }
+    }
   }
 }
 
