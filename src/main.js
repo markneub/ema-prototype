@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import { SweetModal } from 'sweet-modal-vue'
+
+Vue.use(SweetModal)
 
 Vue.config.productionTip = false
 

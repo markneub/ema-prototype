@@ -3,13 +3,29 @@
     <div class="inner">
       <button @click="doRating" class="rate" :style="buttonStyle">Rate</button>
     </div>
+    <sweet-modal :hide-close-button="true" ref="modal">
+      <div class="heading">Mark, please rate your <span :class="`${measure}-color`">{{ measure }}</span> this {{ period }}.
+      </div>
+      <div class="circles">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+      </div>
+    </sweet-modal>
   </div>
 </template>
 
 <script>
+import { SweetModal } from 'sweet-modal-vue'
+
 export default {
   name: 'rating',
   props: ['measure', 'period'],
+  components: {
+    SweetModal
+  },
   data () {
     return {
       rating: null
@@ -17,7 +33,7 @@ export default {
   },
   methods: {
     doRating () {
-      console.debug(this)
+      this.$refs.modal.open()
     }
   },
   computed: {
@@ -34,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../scss/common.scss';
 
 .rating {
@@ -48,16 +64,16 @@ export default {
   }
 
   button.rate {
-    border-width: 1px;
+    border-width: 2px;
     border-style: solid;
     background: transparent;
     padding: 6px 8px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 18px;
     text-transform: uppercase;
-    font-weight: 400;
+    font-weight: 500;
     outline: none;
   }
 
@@ -75,4 +91,28 @@ export default {
     border-color: $energy;
   }
 }
+
+.sweet-modal {
+  max-width: 800px !important;
+
+  .heading {
+    font-weight: 500;
+    font-size: 30px;
+  }
+
+  .circles {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin: 20px auto 0;
+    .circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 32px;
+      background-color: #D8D8D8;
+    }
+  }
+}
+
+
 </style>

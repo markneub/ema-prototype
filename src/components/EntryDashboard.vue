@@ -56,7 +56,7 @@ export default {
 #entry-dashboard {
   min-width: 916px;
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 80px auto 0;
 }
 
 .heading {
