@@ -51,12 +51,12 @@ export default {
     },
     rows () {
       let out = []
-      this.userdata.forEach((arrayEl, index) => {
-        let dayLabel = moment().subtract(7 - index, 'days').format('ddd Do')
-        out.push([dayLabel + '', arrayEl['mood'][0], arrayEl['stress'][0], arrayEl['energy'][0]])
-        // afternoon and evening labels aren't shown on axis
-        out.push([dayLabel + ' afternoon', arrayEl['mood'][1], arrayEl['stress'][1], arrayEl['energy'][1]])
-        out.push([dayLabel + ' evening', arrayEl['mood'][2], arrayEl['stress'][2], arrayEl['energy'][2]])
+      Object.keys(this.userdata).forEach(date => {
+        let dayData = this.userdata[date]
+        let label = moment(date, 'L').format('ddd Do')
+        out.push([label, dayData['mood'][0], dayData['stress'][0], dayData['energy'][0]])
+        out.push([label + ' afternoon', dayData['mood'][1], dayData['stress'][1], dayData['energy'][1]])
+        out.push([label + ' evening', dayData['mood'][2], dayData['stress'][2], dayData['energy'][2]])
       })
       return out
     }

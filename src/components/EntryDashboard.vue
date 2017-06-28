@@ -1,5 +1,5 @@
 <template>
-  <div id="entry-dashboard">
+  <div id="entry-dashboard" v-if="userdata">
     <div id="time-line"><div>{{ now.format('LT') }}</div></div>
     <div class="heading">
       <div class="mood">Mood</div>
@@ -13,7 +13,7 @@
           <div class="description">before noon</div>
         </div>
       </div>
-      <rating v-for="measure in measures" :measure="measure" period="morning" :key="`${measure}-morning`" v-on:rate="rate"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="morning" :userdata="userdata" :key="`${measure}-morning`" v-on:rate="rate"></rating>
     </div>
     <div class="row">
       <div class="period afternoon">
@@ -22,7 +22,7 @@
           <div class="description">noon to 5:00</div>
         </div>
       </div>
-      <rating v-for="measure in measures" :measure="measure" period="afternoon" :key="`${measure}-morning`" v-on:rate="rate"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="afternoon" :userdata="userdata" :key="`${measure}-morning`" v-on:rate="rate"></rating>
     </div>
     <div class="row last">
       <div class="period evening">
@@ -31,7 +31,7 @@
           <div class="description">5:00 to bedtime</div>
         </div>
       </div>
-      <rating v-for="measure in measures" :measure="measure" period="evening" :key="`${measure}-morning`" v-on:rate="rate"></rating>
+      <rating v-for="measure in measures" :measure="measure" period="evening" :userdata="userdata" :key="`${measure}-morning`" v-on:rate="rate"></rating>
     </div>
     <rating-history :userdata="userdata"></rating-history>
   </div>
@@ -41,15 +41,16 @@
 /* global $ */
 import Rating from '@/components/Rating'
 import RatingHistory from '@/components/RatingHistory'
-import UserData from '@/js/mock-data'
 import moment from 'moment'
+import axios from 'axios'
+import Vue from 'vue'
 
 export default {
   data () {
     return {
       now: moment(),
       measures: ['mood', 'stress', 'energy'],
-      userdata: UserData()
+      userdata: null
     }
   },
   components: {
@@ -57,8 +58,14 @@ export default {
     RatingHistory
   },
   mounted () {
-    window.setInterval(this.updateTimeLine, 1000)
-    this.$nextTick(this.updateTimeLine)
+    // get userdata from local api server
+    axios.get('http://localhost:3000/userdata').then(resp => {
+      this.userdata = resp.data
+      window.setInterval(this.updateTimeLine, 1000)
+      this.$nextTick(this.updateTimeLine)
+    }).catch(err => {
+      console.log(err)
+    })
   },
   methods: {
     updateTimeLine () {
@@ -84,23 +91,37 @@ export default {
       $('#time-line').css('top', pxOffset)
     },
     rate (period, measure, rating) {
-      let periodMap = {
+      let date = moment().format('L')
+      let periodIndex = {
         'morning': 0,
         'afternoon': 1,
         'evening': 2
-      }
-      let periodIndex = periodMap[period]
-      if (this.userdata.length === 7) { // no data for today has been recorded yet
-        this.userdata.push({
+      }[period]
+
+      let dayData
+      if (!this.userdata[date]) {
+        dayData = {
           'mood': [null, null, null],
           'stress': [null, null, null],
           'energy': [null, null, null]
-        })
+        }
+      } else {
+        dayData = this.userdata[date]
       }
-      // append the new datum reactively
-      let dayData = this.userdata[7]
+
+      // update datastore reactively
+      let tempData = this.userdata
       dayData[measure][periodIndex] = rating
-      this.$set(this.userdata, 7, dayData)
+      tempData[date] = dayData
+      this.userdata = Vue.util.extend({}, tempData)
+
+      // update the backend
+      axios.post('http://localhost:3000/record', {
+        period,
+        measure,
+        rating,
+        date: moment().unix()
+      })
     }
   }
 }

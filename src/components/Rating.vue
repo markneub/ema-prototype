@@ -24,11 +24,12 @@
 <script>
 /* global $ */
 import moment from 'moment'
+import _ from 'lodash'
 import { SweetModal } from 'sweet-modal-vue'
 
 export default {
   name: 'rating',
-  props: ['measure', 'period'],
+  props: ['measure', 'period', 'userdata'],
   components: {
     SweetModal
   },
@@ -51,6 +52,17 @@ export default {
     }
   },
   mounted () {
+    // check for an existing rating from the backend
+    let periodIndex = {
+      'morning': 0,
+      'afternoon': 1,
+      'evening': 2
+    }[this.period]
+    let rating = _.get(this.userdata, [this.date, this.measure, periodIndex])
+    if (rating) {
+      this.rating = rating
+    }
+
     window.setInterval(() => {
       this.now = moment()
     }, 1000)
@@ -92,6 +104,9 @@ export default {
     }
   },
   computed: {
+    date () {
+      return this.now.format('L')
+    },
     buttonActive () {
       if (this.period === 'morning') return true
       if (this.period === 'afternoon') {
