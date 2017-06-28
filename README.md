@@ -4,7 +4,7 @@
 
 ## Setup
 
-This project is built and tested with Node.js v6.11.0. If you use nvm, you can switch with `nvm use`.
+This project is built and tested with Node.js v6.11.0. If you use nvm, you can easily switch to this version with `nvm use`.
 
 ``` bash
 # install dependencies
@@ -14,7 +14,7 @@ npm install
 npm run dev
 
 # start backend server on port 3000
-node server/index.js
+cd server && node index.js
 ```
 
 ## Notes
